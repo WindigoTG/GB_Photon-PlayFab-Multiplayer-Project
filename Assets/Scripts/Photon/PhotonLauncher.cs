@@ -136,7 +136,7 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
 
     private void OnJoinRoomButtonClick()
     {
-        var roomName = _roomNameInput.text.TrimStart().TrimEnd();
+        var roomName = _roomNameInput.text.Trim();
         if (string.IsNullOrEmpty(roomName))
         {
             Debug.Log($"Enter a room name");
