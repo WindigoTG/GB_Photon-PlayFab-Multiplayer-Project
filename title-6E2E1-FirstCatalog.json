@@ -1,0 +1,247 @@
+{
+  "CatalogVersion": "FirstCatalog",
+  "Catalog": [
+    {
+      "ItemId": "wooden_sword",
+      "ItemClass": "sword",
+      "CatalogVersion": "FirstCatalog",
+      "DisplayName": "Wooden sword",
+      "Description": "A fancy stick",
+      "VirtualCurrencyPrices": {
+        "GP": 50
+      },
+      "RealCurrencyPrices": {},
+      "Tags": [
+        "weapon",
+        "one-handed"
+      ],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": null,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": true,
+      "IsStackable": false,
+      "IsTradable": true,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "iron_sword",
+      "ItemClass": "sword",
+      "CatalogVersion": "FirstCatalog",
+      "DisplayName": "Iron sword",
+      "Description": "A rough iron bar with sharpened edges",
+      "VirtualCurrencyPrices": {
+        "GP": 100
+      },
+      "RealCurrencyPrices": {},
+      "Tags": [
+        "weapon",
+        "one-handed"
+      ],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": null,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": false,
+      "IsTradable": true,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "steel_arming_sword",
+      "ItemClass": "sword",
+      "CatalogVersion": "FirstCatalog",
+      "DisplayName": "Steel arming sword",
+      "Description": "A nice one-handed steel sword",
+      "VirtualCurrencyPrices": {
+        "GP": 150
+      },
+      "RealCurrencyPrices": null,
+      "Tags": [
+        "weapon",
+        "one-handed"
+      ],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": null,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": false,
+      "IsTradable": true,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "steel_long_sword",
+      "ItemClass": "sword",
+      "CatalogVersion": "FirstCatalog",
+      "DisplayName": "Steel long sword",
+      "Description": "A nice two-handed steel sword",
+      "VirtualCurrencyPrices": {
+        "GP": 200
+      },
+      "RealCurrencyPrices": null,
+      "Tags": [
+        "weapon",
+        "two-handed"
+      ],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": null,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": false,
+      "IsTradable": true,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "first_quest_reward",
+      "ItemClass": null,
+      "CatalogVersion": "FirstCatalog",
+      "DisplayName": "First quest reward",
+      "Description": null,
+      "VirtualCurrencyPrices": {},
+      "RealCurrencyPrices": null,
+      "Tags": [],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": 1,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": {
+        "BundledItems": [
+          "iron_sword"
+        ],
+        "BundledResultTables": [],
+        "BundledVirtualCurrencies": {
+          "GP": 100
+        }
+      },
+      "CanBecomeCharacter": false,
+      "IsStackable": false,
+      "IsTradable": false,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "key_small",
+      "ItemClass": "key",
+      "CatalogVersion": "FirstCatalog",
+      "DisplayName": "Small key",
+      "Description": "A key used to open simple locks",
+      "VirtualCurrencyPrices": {
+        "GP": 15,
+        "RM": 50
+      },
+      "RealCurrencyPrices": null,
+      "Tags": [
+        "small"
+      ],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": 1,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": null,
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": true,
+      "IsTradable": false,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    },
+    {
+      "ItemId": "small_jewelry_box",
+      "ItemClass": "container",
+      "CatalogVersion": "FirstCatalog",
+      "DisplayName": "Small jewelry box",
+      "Description": "A small locked box. Who knows what can be hidden inside?",
+      "VirtualCurrencyPrices": {},
+      "RealCurrencyPrices": null,
+      "Tags": [],
+      "CustomData": null,
+      "Consumable": {
+        "UsageCount": 1,
+        "UsagePeriod": null,
+        "UsagePeriodGroup": null
+      },
+      "Container": {
+        "KeyItemId": "key_small",
+        "ItemContents": [],
+        "ResultTableContents": [],
+        "VirtualCurrencyContents": {
+          "GP": 150
+        }
+      },
+      "Bundle": null,
+      "CanBecomeCharacter": false,
+      "IsStackable": false,
+      "IsTradable": false,
+      "ItemImageUrl": null,
+      "IsLimitedEdition": false,
+      "InitialLimitedEditionCount": 0,
+      "ActivatedMembership": null
+    }
+  ],
+  "DropTables": [
+    {
+      "TableId": "sword_drop",
+      "Nodes": [
+        {
+          "ResultItemType": "ItemId",
+          "ResultItem": "wooden_sword",
+          "Weight": 3
+        },
+        {
+          "ResultItemType": "ItemId",
+          "ResultItem": "iron_sword",
+          "Weight": 2
+        },
+        {
+          "ResultItemType": "ItemId",
+          "ResultItem": "steel_arming_sword",
+          "Weight": 1
+        },
+        {
+          "ResultItemType": "ItemId",
+          "ResultItem": "steel_long_sword",
+          "Weight": 1
+        }
+      ]
+    }
+  ]
+}
