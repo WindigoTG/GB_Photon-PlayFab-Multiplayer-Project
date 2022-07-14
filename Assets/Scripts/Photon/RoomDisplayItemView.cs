@@ -10,6 +10,7 @@ public class RoomDisplayItemView : MonoBehaviour, IPointerClickHandler
     [SerializeField] private TextMeshProUGUI _text;
     [SerializeField] private Color _defaultColor;
     [SerializeField] private Color _selectedColor;
+    [SerializeField] private Toggle _isOpenToggle;
 
     private string _roomName;
     private Action<string> _onClickCallback;
@@ -29,5 +30,10 @@ public class RoomDisplayItemView : MonoBehaviour, IPointerClickHandler
     public void SetSelected(bool isSelected)
     {
         _background.color = isSelected ? _selectedColor : _defaultColor;
+    }
+
+    public void SetIsOpen(bool isOpen)
+    {
+        _isOpenToggle.isOn = isOpen;
     }
 }

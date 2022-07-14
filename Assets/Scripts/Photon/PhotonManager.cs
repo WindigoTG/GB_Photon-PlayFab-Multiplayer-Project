@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallbacks, IMatchmakingCallbacks
+public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallbacks, IMatchmakingCallbacks, IInRoomCallbacks
 {
     [SerializeField] private ServerSettings _serverSettings;
     [Space]
@@ -71,6 +71,7 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
         _joinRoomPanel.JoinButton.onClick.AddListener(JoinRoom);
 
         _inRoomPanel.LeaveRoomButton.onClick.AddListener(LeaveRoom);
+        _inRoomPanel.IsOpenToggle.onValueChanged.AddListener(SetRoomOpen);
     }
 
     private void UnsubscribeButtons()
@@ -85,6 +86,7 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
         _joinRoomPanel.JoinButton.onClick.RemoveAllListeners();
 
         _inRoomPanel.LeaveRoomButton.onClick.RemoveAllListeners();
+        _inRoomPanel.IsOpenToggle.onValueChanged.RemoveAllListeners();
     }
 
     private void ShowMainMenuPanel()
@@ -117,6 +119,9 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
         _createRoomPanel.SetEnabled(false);
         _joinRoomPanel.SetEnabled(false);
         _mainMenuPanel.SetEnabled(false);
+
+        _inRoomPanel.SetRoomName(_lbc.CurrentRoom.Name);
+        UpdateRoomControl();
     }
 
     private void CreateRoom()
@@ -150,6 +155,27 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
     private void LeaveRoom()
     {
         _lbc.OpLeaveRoom(false);
+    }
+
+    private void SetRoomOpen(bool isOpen)
+    {
+        if (CheckIfMasterClient())
+            _lbc.CurrentRoom.IsOpen = isOpen;
+    }
+
+    private bool CheckIfMasterClient()
+    {
+        var masterClient = _lbc.CurrentRoom.Players[_lbc.CurrentRoom.MasterClientId];
+
+        return masterClient != null && masterClient.UserId.Equals(_lbc.UserId);
+    }
+
+    private void UpdateRoomControl()
+    {
+        var isMasterClient = CheckIfMasterClient();
+
+        _inRoomPanel.IsOpenToggle.interactable = isMasterClient;
+        _inRoomPanel.IsOpenToggle.isOn = _lbc.CurrentRoom.IsOpen;
     }
 
     #endregion
@@ -225,6 +251,7 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
                     _cachedRoomList.Add(info.Name, info);
                     _joinRoomPanel.AddRoom(info.Name);
                 }
+                _joinRoomPanel.UpdateRoomIsOpen(info.Name, info.IsOpen);
             }
         }
     }
@@ -274,6 +301,37 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
     {
         Debug.Log("Left room");
         ShowMainMenuPanel();
+    }
+
+    #endregion
+
+
+    #region IInRoomCallbacks
+
+    public void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.Log($"{newPlayer.UserId} entered the room");
+    }
+
+    public void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Debug.Log($"{otherPlayer.UserId} left the room");
+    }
+
+    public void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
+    {
+        UpdateRoomControl();
+    }
+
+    public void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        
+    }
+
+    public void OnMasterClientSwitched(Player newMasterClient)
+    {
+        Debug.Log($"{newMasterClient.UserId} is now Master Client");
+        UpdateRoomControl();
     }
 
     #endregion

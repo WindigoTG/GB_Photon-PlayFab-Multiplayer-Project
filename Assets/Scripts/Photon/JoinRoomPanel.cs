@@ -37,6 +37,14 @@ public class JoinRoomPanel : BasePanel
         _selectedRoomName = roomName;
     }
 
+    public void UpdateRoomIsOpen(string roomName, bool isOpen)
+    {
+        if (!_rooms.ContainsKey(roomName))
+            return;
+
+        _rooms[roomName].SetIsOpen(isOpen);
+    }
+
     public void RemoveRoom(string roomName)
     {
         if (!_rooms.ContainsKey(roomName))
