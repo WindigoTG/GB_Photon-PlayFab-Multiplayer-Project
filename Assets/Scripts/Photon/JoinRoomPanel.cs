@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 [Serializable]
 public class JoinRoomPanel : BasePanel
 {
-    [SerializeField] private Button _joinButton;
+    [SerializeField] private Button _joinSelectedButton;
+    [SerializeField] private Button _joinByNameButton;
     [SerializeField] private Button _backButton;
+    [SerializeField] private TMP_InputField _input;
     [SerializeField] private RoomDisplayItemView _roomItemPrefab;
     [SerializeField] private RectTransform _roomDisplayParent;
 
@@ -16,9 +19,10 @@ public class JoinRoomPanel : BasePanel
     private string _selectedRoomName;
 
     public string SelectedRoomName => _selectedRoomName;
-
-    public Button JoinButton => _joinButton;
+    public Button JoinSelectedButton => _joinSelectedButton;
+    public Button JoinByNameButton => _joinByNameButton;
     public Button BackButton => _backButton;
+    public TMP_InputField Input => _input;
 
     public void AddRoom(string roomName)
     {
@@ -49,6 +53,9 @@ public class JoinRoomPanel : BasePanel
     {
         if (!_rooms.ContainsKey(roomName))
             return;
+
+        if (!string.IsNullOrEmpty(_selectedRoomName) && _selectedRoomName.Equals(roomName))
+            _selectedRoomName = null;
 
         GameObject.Destroy(_rooms[roomName].gameObject);
         _rooms.Remove(roomName);

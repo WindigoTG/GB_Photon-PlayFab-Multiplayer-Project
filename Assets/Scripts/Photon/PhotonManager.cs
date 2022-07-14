@@ -68,10 +68,12 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
         _createRoomPanel.BackButton.onClick.AddListener(ShowMainMenuPanel);
 
         _joinRoomPanel.BackButton.onClick.AddListener(ShowMainMenuPanel);
-        _joinRoomPanel.JoinButton.onClick.AddListener(JoinRoom);
+        _joinRoomPanel.JoinSelectedButton.onClick.AddListener(JoinSelectedRoom);
+        _joinRoomPanel.JoinByNameButton.onClick.AddListener(JoinRoomByName);
 
         _inRoomPanel.LeaveRoomButton.onClick.AddListener(LeaveRoom);
         _inRoomPanel.IsOpenToggle.onValueChanged.AddListener(SetRoomOpen);
+        _inRoomPanel.IsVisibleToggle.onValueChanged.AddListener(SetRoomVisible);
     }
 
     private void UnsubscribeButtons()
@@ -83,10 +85,12 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
         _createRoomPanel.BackButton.onClick.RemoveAllListeners();
 
         _joinRoomPanel.BackButton.onClick.RemoveAllListeners();
-        _joinRoomPanel.JoinButton.onClick.RemoveAllListeners();
+        _joinRoomPanel.JoinSelectedButton.onClick.RemoveAllListeners();
+        _joinRoomPanel.JoinByNameButton.onClick.RemoveAllListeners();
 
         _inRoomPanel.LeaveRoomButton.onClick.RemoveAllListeners();
         _inRoomPanel.IsOpenToggle.onValueChanged.RemoveAllListeners();
+        _inRoomPanel.IsVisibleToggle.onValueChanged.RemoveAllListeners();
     }
 
     private void ShowMainMenuPanel()
@@ -103,6 +107,10 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
         _mainMenuPanel.SetEnabled(false);
         _joinRoomPanel.SetEnabled(false);
         _inRoomPanel.SetEnabled(false);
+
+        _createRoomPanel.IsOpenToggle.isOn = true;
+        _createRoomPanel.IsVisibleToggle.isOn = true;
+        _createRoomPanel.Input.text = "";
     }
 
     private void ShowJoinRoomPanel()
@@ -111,6 +119,8 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
         _mainMenuPanel.SetEnabled(false);
         _createRoomPanel.SetEnabled(false);
         _inRoomPanel.SetEnabled(false);
+
+        _joinRoomPanel.Input.text = "";
     }
 
     private void ShowInRoomPanel()
@@ -128,6 +138,9 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
     {
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = _maxPlayers;
+        roomOptions.IsOpen = _createRoomPanel.IsOpenToggle.isOn;
+        roomOptions.IsVisible = _createRoomPanel.IsVisibleToggle.isOn;
+        roomOptions.PublishUserId = true;
 
         EnterRoomParams enterRoomParams = new EnterRoomParams();
         enterRoomParams.RoomOptions = roomOptions;
@@ -137,12 +150,20 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
         _lbc.OpCreateRoom(enterRoomParams);
     }
 
-    private void JoinRoom()
+    private void JoinSelectedRoom()
     {
         if (string.IsNullOrEmpty(_joinRoomPanel.SelectedRoomName))
             return;
 
         JoinRoom(_joinRoomPanel.SelectedRoomName);
+    }
+
+    private void JoinRoomByName()
+    {
+        if (string.IsNullOrEmpty(_joinRoomPanel.Input.text))
+            return;
+
+        JoinRoom(_joinRoomPanel.Input.text);
     }
 
     private void JoinRoom(string roomName)
@@ -163,11 +184,18 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
             _lbc.CurrentRoom.IsOpen = isOpen;
     }
 
+    private void SetRoomVisible(bool isVisible)
+    {
+        if (CheckIfMasterClient())
+            _lbc.CurrentRoom.IsVisible = isVisible;
+    }
+
     private bool CheckIfMasterClient()
     {
         var masterClient = _lbc.CurrentRoom.Players[_lbc.CurrentRoom.MasterClientId];
 
-        return masterClient != null && masterClient.UserId.Equals(_lbc.UserId);
+        return masterClient != null && !string.IsNullOrEmpty(masterClient.UserId) && 
+            masterClient.UserId.Equals(_lbc.UserId);
     }
 
     private void UpdateRoomControl()
@@ -176,6 +204,9 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
 
         _inRoomPanel.IsOpenToggle.interactable = isMasterClient;
         _inRoomPanel.IsOpenToggle.isOn = _lbc.CurrentRoom.IsOpen;
+
+        _inRoomPanel.IsVisibleToggle.interactable = isMasterClient;
+        _inRoomPanel.IsVisibleToggle.isOn = _lbc.CurrentRoom.IsVisible;
     }
 
     #endregion
