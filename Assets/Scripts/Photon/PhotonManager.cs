@@ -1,6 +1,5 @@
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,13 +27,20 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
     {
         _roomsCanvas.enabled = false;
 
-        _lbc = new LoadBalancingClient();
-        _lbc.AddCallbackTarget(this);
+        //_lbc = new LoadBalancingClient();
+        //_lbc.AddCallbackTarget(this);
+        PhotonNetwork.AddCallbackTarget(this);
 
-        if (!_lbc.ConnectUsingSettings(_serverSettings.AppSettings))
-            Debug.LogError("Error connection!");
+        //if (!_lbc.ConnectUsingSettings(_serverSettings.AppSettings))
+        //  Debug.LogError("Error connection!");
+        if (!PhotonNetwork.IsConnected)
+            PhotonNetwork.ConnectUsingSettings(_serverSettings.AppSettings);
+                
 
         SubscribeButtons();
+
+        PhotonNetwork.AutomaticallySyncScene = true;
+
     }
 
     void Update()
@@ -50,7 +56,8 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
 
     private void OnDestroy()
     {
-        _lbc.RemoveCallbackTarget(this);
+        PhotonNetwork.RemoveCallbackTarget(this);
+        //_lbc.RemoveCallbackTarget(this);
         UnsubscribeButtons();
     }
 
@@ -74,7 +81,10 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
         _inRoomPanel.LeaveRoomButton.onClick.AddListener(LeaveRoom);
         _inRoomPanel.IsOpenToggle.onValueChanged.AddListener(SetRoomOpen);
         _inRoomPanel.IsVisibleToggle.onValueChanged.AddListener(SetRoomVisible);
+        _inRoomPanel.StartGameButton.onClick.AddListener(StartGame);
     }
+
+    
 
     private void UnsubscribeButtons()
     {
@@ -91,6 +101,7 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
         _inRoomPanel.LeaveRoomButton.onClick.RemoveAllListeners();
         _inRoomPanel.IsOpenToggle.onValueChanged.RemoveAllListeners();
         _inRoomPanel.IsVisibleToggle.onValueChanged.RemoveAllListeners();
+        _inRoomPanel.StartGameButton.onClick.RemoveAllListeners();
     }
 
     private void ShowMainMenuPanel()
@@ -130,7 +141,8 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
         _joinRoomPanel.SetEnabled(false);
         _mainMenuPanel.SetEnabled(false);
 
-        _inRoomPanel.SetRoomName(_lbc.CurrentRoom.Name);
+        //_inRoomPanel.SetRoomName(_lbc.CurrentRoom.Name);
+        _inRoomPanel.SetRoomName(PhotonNetwork.CurrentRoom.Name); 
         UpdateRoomControl();
     }
 
@@ -147,7 +159,9 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
         if (!string.IsNullOrWhiteSpace(_createRoomPanel.Input.text))
             enterRoomParams.RoomName = _createRoomPanel.Input.text;
 
-        _lbc.OpCreateRoom(enterRoomParams);
+        PhotonNetwork.CreateRoom(_createRoomPanel.Input.text, roomOptions);
+
+        //_lbc.OpCreateRoom(enterRoomParams);
     }
 
     private void JoinSelectedRoom()
@@ -168,45 +182,67 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
 
     private void JoinRoom(string roomName)
     {
-        EnterRoomParams enterRoomParams = new EnterRoomParams();
-        enterRoomParams.RoomName = roomName;
-        _lbc.OpJoinRoom(enterRoomParams);
+        //EnterRoomParams enterRoomParams = new EnterRoomParams();
+        //enterRoomParams.RoomName = roomName;
+        
+        //_lbc.OpJoinRoom(enterRoomParams);
+
+        PhotonNetwork.JoinRoom(roomName);
     }
 
     private void LeaveRoom()
     {
-        _lbc.OpLeaveRoom(false);
+        //_lbc.OpLeaveRoom(false);
+
+        PhotonNetwork.LeaveRoom(false);
     }
 
     private void SetRoomOpen(bool isOpen)
     {
-        if (CheckIfMasterClient())
-            _lbc.CurrentRoom.IsOpen = isOpen;
+        //if (CheckIfMasterClient())
+        //    _lbc.CurrentRoom.IsOpen = isOpen;
+
+        if (PhotonNetwork.IsMasterClient)
+            PhotonNetwork.CurrentRoom.IsOpen = isOpen;
     }
 
     private void SetRoomVisible(bool isVisible)
     {
-        if (CheckIfMasterClient())
-            _lbc.CurrentRoom.IsVisible = isVisible;
+        //if (CheckIfMasterClient())
+        //    _lbc.CurrentRoom.IsVisible = isVisible;
+
+        if (PhotonNetwork.IsMasterClient)
+            PhotonNetwork.CurrentRoom.IsVisible = isVisible;
     }
 
-    private bool CheckIfMasterClient()
-    {
-        var masterClient = _lbc.CurrentRoom.Players[_lbc.CurrentRoom.MasterClientId];
+    //private bool CheckIfMasterClient()
+    //{
+    //    var masterClient = _lbc.CurrentRoom.Players[_lbc.CurrentRoom.MasterClientId];
 
-        return masterClient != null && !string.IsNullOrEmpty(masterClient.UserId) && 
-            masterClient.UserId.Equals(_lbc.UserId);
-    }
+    //    return masterClient != null && !string.IsNullOrEmpty(masterClient.UserId) && 
+    //        masterClient.UserId.Equals(_lbc.UserId);
+    //}
 
     private void UpdateRoomControl()
     {
-        var isMasterClient = CheckIfMasterClient();
+        //var isMasterClient = CheckIfMasterClient();
+
+        var isMasterClient = PhotonNetwork.IsMasterClient;
 
         _inRoomPanel.IsOpenToggle.interactable = isMasterClient;
-        _inRoomPanel.IsOpenToggle.isOn = _lbc.CurrentRoom.IsOpen;
+        //_inRoomPanel.IsOpenToggle.isOn = _lbc.CurrentRoom.IsOpen;
+        _inRoomPanel.IsOpenToggle.isOn = PhotonNetwork.CurrentRoom.IsOpen;
 
         _inRoomPanel.IsVisibleToggle.interactable = isMasterClient;
-        _inRoomPanel.IsVisibleToggle.isOn = _lbc.CurrentRoom.IsVisible;
+        //_inRoomPanel.IsVisibleToggle.isOn = _lbc.CurrentRoom.IsVisible;
+        _inRoomPanel.IsVisibleToggle.isOn = PhotonNetwork.CurrentRoom.IsVisible;
+
+        _inRoomPanel.StartGameButton.interactable = isMasterClient;
+    }
+
+    private void StartGame()
+    {
+        PhotonNetwork.LoadLevel(3);
     }
 
     #endregion
@@ -221,7 +257,8 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
 
     public void OnConnectedToMaster()
     {
-        _lbc.OpJoinLobby(_customLobby);
+        //_lbc.OpJoinLobby(_customLobby);
+        PhotonNetwork.JoinLobby(_customLobby);
         _roomsCanvas.enabled = true;
         ShowMainMenuPanel();
     }
@@ -314,7 +351,8 @@ public class PhotonManager : MonoBehaviour, IConnectionCallbacks, ILobbyCallback
 
     public void OnJoinedRoom()
     {
-        Debug.Log($"Joined room: {_lbc.CurrentRoom.Name}");
+        //Debug.Log($"Joined room: {_lbc.CurrentRoom.Name}");
+        Debug.Log($"Joined room: {PhotonNetwork.CurrentRoom.Name}");
         ShowInRoomPanel();
     }
 

@@ -161,6 +161,9 @@ public class PlayFabLogin : MonoBehaviour
         _continueButton.interactable = true;
         _resetAnonimousButton.interactable = true;
         _persistentLogInButton.interactable = true;
+
+        if (PlayFabDataHolder.Instance != null)
+            PlayFabDataHolder.Instance.PlayFabID = result.PlayFabId;
     }
 
     private void OnLoginFailure(PlayFabError error)
@@ -243,6 +246,9 @@ public class PlayFabLogin : MonoBehaviour
 
         PlayerPrefs.SetString(PERSISTENT_AUTHENTICATION_EMAIL, _email);
         PlayerPrefs.SetString(PERSISTENT_AUTHENTICATION_PASSWORD, _password);
+
+        if (PlayFabDataHolder.Instance != null)
+            PlayFabDataHolder.Instance.PlayFabID = result.PlayFabId;
     }
 
     private void OnSignInButtonClick()
@@ -281,6 +287,9 @@ public class PlayFabLogin : MonoBehaviour
 
         PlayerPrefs.SetString(PERSISTENT_AUTHENTICATION_EMAIL, _email);
         PlayerPrefs.SetString(PERSISTENT_AUTHENTICATION_PASSWORD, _password);
+
+        if (PlayFabDataHolder.Instance != null)
+            PlayFabDataHolder.Instance.PlayFabID = result.PlayFabId;
     }
 
 
