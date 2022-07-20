@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PhotonScene.unity
     guid: e8891bb61ac15f142a2579aec909856f
+  - enabled: 1
+    path: Assets/Scenes/GameScene.unity
+    guid: a2c88f34bd15b184397606b8198fe5cb
   m_configObjects: {}
